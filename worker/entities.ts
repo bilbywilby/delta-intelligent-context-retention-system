@@ -1,5 +1,5 @@
-import { IndexedEntity, Entity } from "./core-utils";
-import type { Session, Checkpoint, DeletionEpisode, User } from "@shared/types";
+import { IndexedEntity } from "./core-utils";
+import type { SessionState, Checkpoint, DeletionEpisode, User } from "@shared/types";
 import { MOCK_SESSIONS, MOCK_EPISODES, MOCK_USERS, MOCK_CHECKPOINTS } from "@shared/mock-data";
 export class UserEntity extends IndexedEntity<User> {
   static readonly entityName = "user";
@@ -7,16 +7,15 @@ export class UserEntity extends IndexedEntity<User> {
   static readonly initialState: User = { id: "", name: "" };
   static seedData = MOCK_USERS;
 }
-export type SessionState = Session & { checkpoints: Checkpoint[] };
 export class SessionEntity extends IndexedEntity<SessionState> {
   static readonly entityName = "session";
   static readonly indexName = "sessions";
-  static readonly initialState: SessionState = { 
-    id: "", 
-    title: "", 
-    createdAt: 0, 
-    updatedAt: 0, 
-    checkpoints: [] 
+  static readonly initialState: SessionState = {
+    id: "",
+    title: "",
+    createdAt: 0,
+    updatedAt: 0,
+    checkpoints: []
   };
   static seedData = MOCK_SESSIONS.map(s => ({
     ...s,

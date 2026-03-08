@@ -13,6 +13,7 @@ import { RouteErrorBoundary } from '@/components/RouteErrorBoundary';
 import '@/index.css'
 import { HomePage } from '@/pages/HomePage'
 import { SessionPage } from '@/pages/SessionPage'
+import { MemoryBankPage } from '@/pages/MemoryBankPage'
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -23,6 +24,11 @@ const router = createBrowserRouter([
   {
     path: "/sessions/:id",
     element: <SessionPage />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/memory",
+    element: <MemoryBankPage />,
     errorElement: <RouteErrorBoundary />,
   },
 ]);

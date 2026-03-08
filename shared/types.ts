@@ -17,6 +17,9 @@ export interface Session {
   updatedAt: number;
   lastCheckpointId?: string;
 }
+export interface SessionState extends Session {
+  checkpoints: Checkpoint[];
+}
 export interface DeletionEpisode {
   id: string;
   context: string;
@@ -32,4 +35,20 @@ export interface EnhanceResponse {
 export interface User {
   id: string;
   name: string;
+}
+export interface WebhookPayload {
+  signature: string;
+  iv: string;
+  ciphertext: string;
+  messageId: string;
+}
+export interface IngestPayload {
+  title: string;
+  content: string;
+  source: string;
+}
+export interface SystemHealth {
+  status: 'healthy' | 'degraded';
+  storage: boolean;
+  timestamp: string;
 }
