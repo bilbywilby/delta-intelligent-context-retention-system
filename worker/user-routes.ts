@@ -28,8 +28,8 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
     // 1. Rate Limiting & Idempotency Check
     const ip = c.req.header('cf-connecting-ip') || 'anonymous';
     const limitStub = c.env.GlobalDurableObject.get(c.env.GlobalDurableObject.idFromName(`ingest-limit:${ip}`));
-    // Fix TS2558/TS2339: Cast to handle internal storage access correctly
     const idempKey = `ingest-idemp:${idempotencyId}`;
+    // The core-utils getDoc returns { v: number, data: T } | null
     const existing = await limitStub.getDoc(idempKey) as { data: string } | null;
     if (existing) {
       return c.json({ success: true, data: { accepted: true, status: 'already_processed', episodeId: existing.data } }, 202);
@@ -37,14 +37,14 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
     console.time(`ingest-process:${idempotencyId}`);
     // 2. Persist as Episode
     const episodeId = crypto.randomUUID();
-    const episode = await EpisodeEntity.create(c.env, {
+    await EpisodeEntity.create(c.env, {
       id: episodeId,
       context: `Ingested from ${source}`,
       deletedContent: extractedText.slice(0, 500),
       reason: "Automated ingestion pipeline trigger",
       outcome: "neutral",
       timestamp: Date.now(),
-      source: source as any || 'SYSTEM',
+      source: (source as any) || 'SYSTEM',
       metadata: metadata || {}
     });
     // 3. Mark Idempotency
@@ -126,6 +126,7 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
     const { content } = await c.req.json<{ content: string }>();
     await EpisodeEntity.ensureSeed(c.env);
     const episodes = await EpisodeEntity.list(c.env);
+    // Simple mock logic for demonstration: return first 2 episodes
     const relevant = episodes.items.slice(0, 2);
     return ok(c, {
       suggestions: [

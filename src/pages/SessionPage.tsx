@@ -5,7 +5,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { api } from '@/lib/api-client';
 import type { SessionState, Checkpoint, EnhanceResponse } from '@shared/types';
 import { Textarea } from '@/components/ui/textarea';
-import { Brain, Save, Sparkles, History, ArrowLeft, CheckCircle2, Loader2, Database } from 'lucide-react';
+import { Brain, Save, Sparkles, History, ArrowLeft, CheckCircle, Loader2, Database } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
 export function SessionPage() {
@@ -130,7 +130,7 @@ export function SessionPage() {
                           <Database className="h-3 w-3" />
                           {ep.source || 'HISTORY'}
                         </span>
-                        <CheckCircle2 className="h-3 w-3" />
+                        <CheckCircle className="h-3 w-3" />
                       </div>
                       <p className="font-bold line-clamp-2">"{ep.context}"</p>
                       <div className="p-2 bg-paper border-l-2 border-primary text-[10px] italic">

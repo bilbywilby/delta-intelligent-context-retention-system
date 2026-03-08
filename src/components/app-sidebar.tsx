@@ -1,5 +1,5 @@
 import React from "react";
-import { LayoutDashboard, Brain, HardDrive, Settings, LogOut, Dog, Globe, Tooltip } from "lucide-react";
+import { LayoutDashboard, Brain, HardDrive, Settings, Dog, Globe } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { TooltipProvider, TooltipTrigger, TooltipContent, Tooltip } from "@/components/ui/tooltip";
 export function AppSidebar(): JSX.Element {
   const location = useLocation();
   const menuItems = [
