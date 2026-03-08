@@ -1,72 +1,62 @@
-/* This is a demo sidebar. **COMPULSORY** Edit this file to customize the sidebar OR remove it from appLayout OR don't use appLayout at all */
 import React from "react";
-import { Home, Layers, Compass, Star, Settings, LifeBuoy } from "lucide-react";
+import { LayoutDashboard, Brain, HardDrive, Settings, LogOut, Dog } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
-  SidebarSeparator,
-  SidebarInput,
-  SidebarGroupLabel,
+  SidebarGroup,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuAction,
-  SidebarMenuBadge,
 } from "@/components/ui/sidebar";
-
+import { cn } from "@/lib/utils";
 export function AppSidebar(): JSX.Element {
+  const location = useLocation();
+  const menuItems = [
+    { label: "Dashboard", icon: LayoutDashboard, path: "/" },
+    { label: "Sessions", icon: HardDrive, path: "/sessions" },
+    { label: "Memory Bank", icon: Brain, path: "/memory" },
+  ];
   return (
-    <Sidebar>
-      <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-1">
-          <div className="h-6 w-6 rounded-md bg-gradient-to-br from-indigo-500 to-purple-500" />
-          <span className="text-sm font-medium">Demo Sidebar</span>
+    <Sidebar className="border-r-2 border-primary bg-white">
+      <SidebarHeader className="p-6">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-none border-2 border-primary bg-secondary shadow-hard-sm">
+            <Dog className="h-6 w-6 text-primary" />
+          </div>
+          <span className="text-2xl font-display font-black tracking-tight">DELTA</span>
         </div>
-        <SidebarInput placeholder="Search" />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="px-3">
         <SidebarGroup>
           <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive>
-                <a href="#"><Home /> <span>Home</span></a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href="#"><Layers /> <span>Projects</span></a>
-              </SidebarMenuButton>
-              <SidebarMenuAction>
-                <Star className="size-4" />
-              </SidebarMenuAction>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href="#"><Compass /> <span>Explore</span></a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
-
-        <SidebarSeparator />
-
-        <SidebarGroup>
-          <SidebarGroupLabel>Quick Links</SidebarGroupLabel>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <a href="#"><Star /> <span>Starred</span></a>
-              </SidebarMenuButton>
-              <SidebarMenuBadge>5</SidebarMenuBadge>
-            </SidebarMenuItem>
+            {menuItems.map((item) => (
+              <SidebarMenuItem key={item.path}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === item.path}
+                  className={cn(
+                    "mb-2 h-12 rounded-none border-2 border-transparent px-4 font-bold transition-all hover:bg-accent",
+                    location.pathname === item.path && "border-primary bg-accent shadow-hard-sm translate-x-[-2px] translate-y-[-2px]"
+                  )}
+                >
+                  <Link to={item.path}>
+                    <item.icon className="mr-3 h-5 w-5" />
+                    <span>{item.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <div className="px-2 text-xs text-muted-foreground">A simple shadcn sidebar</div>
+      <SidebarFooter className="p-6 border-t-2 border-primary">
+        <div className="flex items-center gap-3 text-sm font-bold text-muted-foreground hover:text-primary cursor-pointer transition-colors">
+          <Settings className="h-4 w-4" />
+          <span>System Config</span>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
