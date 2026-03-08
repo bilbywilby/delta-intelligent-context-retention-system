@@ -1,5 +1,5 @@
 import React from "react";
-import { LayoutDashboard, Brain, HardDrive, Settings, LogOut, Dog } from "lucide-react";
+import { LayoutDashboard, Brain, HardDrive, Settings, LogOut, Dog, Globe, Tooltip } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -12,6 +12,7 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 export function AppSidebar(): JSX.Element {
   const location = useLocation();
   const menuItems = [
@@ -52,7 +53,26 @@ export function AppSidebar(): JSX.Element {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="p-6 border-t-2 border-primary">
+      <SidebarFooter className="p-6 border-t-2 border-primary space-y-4">
+        <div className="flex items-center justify-between">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center gap-2 cursor-help">
+                  <div className="relative">
+                    <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                    <div className="absolute inset-0 h-2 w-2 rounded-full bg-green-500 blur-[2px] opacity-60" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-tight text-muted-foreground">System Active</span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="bg-primary text-white border-none rounded-none shadow-hard-sm font-bold text-xs">
+                Delta ingestion nodes are online and monitoring 24/7
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <Globe className="h-3 w-3 text-muted-foreground" />
+        </div>
         <div className="flex items-center gap-3 text-sm font-bold text-muted-foreground hover:text-primary cursor-pointer transition-colors">
           <Settings className="h-4 w-4" />
           <span>System Config</span>

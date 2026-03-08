@@ -5,7 +5,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { api } from '@/lib/api-client';
 import type { SessionState, Checkpoint, EnhanceResponse } from '@shared/types';
 import { Textarea } from '@/components/ui/textarea';
-import { Brain, Save, Sparkles, History, ArrowLeft, CheckCircle2, Loader2 } from 'lucide-react';
+import { Brain, Save, Sparkles, History, ArrowLeft, CheckCircle2, Loader2, Database } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
 export function SessionPage() {
@@ -70,8 +70,17 @@ export function SessionPage() {
                 disabled={isEnhancing || !content}
                 className="illustrative-button bg-secondary text-sm"
               >
-                {isEnhancing ? <Loader2 className="h-4 w-4 animate-spin mr-2 inline" /> : <Sparkles className="h-4 w-4 mr-2 inline" />}
-                Enhance
+                {isEnhancing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2 inline" />
+                    Syncing with Delta...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2 inline" />
+                    Enhance
+                  </>
+                )}
               </button>
             </div>
           </header>
@@ -90,7 +99,7 @@ export function SessionPage() {
           </div>
         </div>
         {/* Right Pane: Intelligence & History */}
-        <div className="w-96 flex flex-col bg-paper overflow-y-auto">
+        <div className="w-96 flex flex-col bg-paper overflow-y-auto border-l-2 border-primary">
           <div className="p-6 space-y-8">
             <section className="space-y-4">
               <div className="flex items-center gap-2">
@@ -104,8 +113,10 @@ export function SessionPage() {
                 </div>
               ) : enhanceData ? (
                 <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                  <div className="illustrative-card bg-secondary/20">
-                    <p className="font-bold mb-2">Suggestions:</p>
+                  <div className="illustrative-card bg-secondary/20 border-secondary">
+                    <p className="font-bold mb-2 flex items-center gap-2">
+                      <Sparkles className="h-4 w-4" /> Suggestions:
+                    </p>
                     <ul className="space-y-2 text-sm italic list-disc list-inside">
                       {enhanceData.suggestions.map((s, i) => (
                         <li key={i}>{s}</li>
@@ -114,13 +125,16 @@ export function SessionPage() {
                   </div>
                   {enhanceData.relevantEpisodes.map((ep) => (
                     <div key={ep.id} className="illustrative-card bg-white text-sm space-y-2">
-                      <div className="flex items-center justify-between text-xs font-bold uppercase opacity-60">
-                        <span>Similar Episode</span>
+                      <div className="flex items-center justify-between text-[10px] font-black uppercase opacity-60">
+                        <span className="flex items-center gap-1">
+                          <Database className="h-3 w-3" />
+                          {ep.source || 'HISTORY'}
+                        </span>
                         <CheckCircle2 className="h-3 w-3" />
                       </div>
                       <p className="font-bold line-clamp-2">"{ep.context}"</p>
-                      <div className="p-2 bg-paper border-l-2 border-primary text-xs italic">
-                        Result: {ep.outcome}
+                      <div className="p-2 bg-paper border-l-2 border-primary text-[10px] italic">
+                        Outcome: <span className="font-black uppercase">{ep.outcome}</span>
                       </div>
                     </div>
                   ))}
@@ -140,13 +154,13 @@ export function SessionPage() {
               <div className="space-y-3">
                 {session.checkpoints && session.checkpoints.length > 0 ? (
                   session.checkpoints.slice().reverse().map((cp) => (
-                    <div 
-                      key={cp.id} 
+                    <div
+                      key={cp.id}
                       className="illustrative-card bg-white p-3 hover:bg-accent cursor-pointer transition-colors group"
                       onClick={() => setContent(cp.content)}
                     >
                       <div className="flex justify-between items-start mb-1">
-                        <span className="font-bold text-xs bg-primary text-white px-2">v{cp.id.slice(0, 4)}</span>
+                        <span className="font-bold text-[10px] bg-primary text-white px-2">v{cp.id.slice(0, 4)}</span>
                         <span className="text-[10px] font-bold text-muted-foreground">{formatDistanceToNow(cp.timestamp)} ago</span>
                       </div>
                       <p className="text-xs line-clamp-1 font-mono italic opacity-60">
@@ -155,7 +169,7 @@ export function SessionPage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-center font-bold text-muted-foreground uppercase py-4">No checkpoints yet</p>
+                  <p className="text-[10px] text-center font-bold text-muted-foreground uppercase py-4">No checkpoints yet</p>
                 )}
               </div>
             </section>

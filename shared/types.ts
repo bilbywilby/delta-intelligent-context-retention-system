@@ -27,6 +27,19 @@ export interface DeletionEpisode {
   reason: string;
   outcome: 'success' | 'reverted' | 'neutral';
   timestamp: number;
+  source?: 'OCR' | 'WEBHOOK' | 'MANUAL' | 'SYSTEM';
+  metadata?: Record<string, unknown>;
+}
+export interface IngestRequest {
+  idempotencyId: string;
+  extractedText: string;
+  source: string;
+  metadata?: Record<string, unknown>;
+}
+export interface IngestResponse {
+  accepted: boolean;
+  status: string;
+  episodeId?: string;
 }
 export interface EnhanceResponse {
   suggestions: string[];

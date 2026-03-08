@@ -39,7 +39,13 @@ export class EpisodeEntity extends IndexedEntity<DeletionEpisode> {
     deletedContent: "",
     reason: "",
     outcome: "neutral",
-    timestamp: 0
+    timestamp: 0,
+    source: "MANUAL",
+    metadata: {}
   };
-  static seedData = MOCK_EPISODES;
+  static seedData = MOCK_EPISODES.map(ep => ({
+    ...ep,
+    source: (ep as any).source || 'MANUAL',
+    metadata: (ep as any).metadata || {}
+  }));
 }

@@ -3,19 +3,21 @@ import { useQuery } from '@tanstack/react-query';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { api } from '@/lib/api-client';
 import { DeletionEpisode } from '@shared/types';
-import { Brain, Search, Trash2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Brain, Search, Trash2, CheckCircle, XCircle, AlertCircle, ChevronDown, ChevronUp, Database } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 export function MemoryBankPage() {
   const [search, setSearch] = useState('');
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const { data: episodesResponse, isLoading } = useQuery({
     queryKey: ['episodes'],
     queryFn: () => api<{ items: DeletionEpisode[] }>('/api/episodes'),
   });
   const episodes = episodesResponse?.items ?? [];
-  const filtered = episodes.filter(e => 
-    e.context.toLowerCase().includes(search.toLowerCase()) || 
-    e.reason.toLowerCase().includes(search.toLowerCase())
+  const filtered = episodes.filter(e =>
+    e.context.toLowerCase().includes(search.toLowerCase()) ||
+    e.reason.toLowerCase().includes(search.toLowerCase()) ||
+    JSON.stringify(e.metadata || {}).toLowerCase().includes(search.toLowerCase())
   );
   const OutcomeIcon = ({ outcome }: { outcome: DeletionEpisode['outcome'] }) => {
     switch (outcome) {
@@ -26,7 +28,7 @@ export function MemoryBankPage() {
   };
   return (
     <AppLayout container>
-      <div className="space-y-8">
+      <div className="space-y-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="p-3 border-2 border-primary bg-secondary shadow-hard-sm">
@@ -41,7 +43,7 @@ export function MemoryBankPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search semantic history..."
+              placeholder="Search semantic history or metadata..."
               className="illustrative-input w-full pl-10"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -63,11 +65,16 @@ export function MemoryBankPage() {
                     <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
                       {format(ep.timestamp, 'MMM dd, yyyy')}
                     </span>
-                    <div className={cn(
-                      "px-2 py-0.5 border-2 border-primary text-[10px] font-black uppercase shadow-hard-sm",
-                      ep.outcome === 'success' ? 'bg-green-100' : ep.outcome === 'reverted' ? 'bg-red-100' : 'bg-amber-100'
-                    )}>
-                      {ep.outcome}
+                    <div className="flex gap-2">
+                      <div className="px-2 py-0.5 border-2 border-primary bg-white text-[10px] font-black uppercase shadow-hard-sm">
+                        {ep.source || 'MANUAL'}
+                      </div>
+                      <div className={cn(
+                        "px-2 py-0.5 border-2 border-primary text-[10px] font-black uppercase shadow-hard-sm",
+                        ep.outcome === 'success' ? 'bg-green-100' : ep.outcome === 'reverted' ? 'bg-red-100' : 'bg-amber-100'
+                      )}>
+                        {ep.outcome}
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -80,6 +87,23 @@ export function MemoryBankPage() {
                     <span className="font-bold uppercase text-[10px] not-italic block mb-1">Reason:</span>
                     {ep.reason}
                   </p>
+                  {ep.metadata && Object.keys(ep.metadata).length > 0 && (
+                    <div className="pt-2">
+                      <button 
+                        onClick={() => setExpandedId(expandedId === ep.id ? null : ep.id)}
+                        className="flex items-center gap-1 text-[10px] font-black uppercase hover:underline"
+                      >
+                        <Database className="h-3 w-3" />
+                        {expandedId === ep.id ? 'Hide Metadata' : 'Show Metadata'}
+                        {expandedId === ep.id ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                      </button>
+                      {expandedId === ep.id && (
+                        <div className="mt-2 p-2 bg-accent/50 border-2 border-primary text-[10px] font-mono whitespace-pre overflow-x-auto">
+                          {JSON.stringify(ep.metadata, null, 2)}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div className="mt-6 pt-4 border-t-2 border-dashed border-primary/20 flex items-center justify-between">
                   <div className="flex items-center gap-2">
