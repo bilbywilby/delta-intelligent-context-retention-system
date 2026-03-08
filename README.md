@@ -1,6 +1,6 @@
 # Cloudflare Workers Chat Demo
 
-[![[cloudflarebutton]]](https://workers.cloudflare.com)
+[![[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/bilbywilby/delta-intelligent-context-retention-system)]](https://workers.cloudflare.com)
 
 A production-ready full-stack chat application built with Cloudflare Workers, Durable Objects, and React. Demonstrates scalable user management, chat boards, and real-time messaging using a single Durable Object namespace for efficient storage and indexing.
 
@@ -124,7 +124,7 @@ Deploy to Cloudflare Workers (free, global edge network):
    wrangler deploy
    ```
 
-**[cloudflarebutton]**
+**[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/bilbywilby/delta-intelligent-context-retention-system)**
 
 ### Post-Deploy
 
